@@ -31,7 +31,7 @@
 
         // Register the service worker
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('https://github.com/akshittyagi171/TestFCM/blob/main/firebase-messaging-sw.js')
+            navigator.serviceWorker.register('firebase-messaging-sw.js')
                 .then((registration) => {
                     console.log('Service Worker registered with scope:', registration.scope);
                 }).catch((error) => {
@@ -67,8 +67,41 @@
             console.log("Message received:", payload);
             alert("New Message: " + payload.notification.title);
         });
+
+        // Service worker functionality
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                console.log('Service worker message received:', event.data);
+            });
+        }
+
+        // Register the background message handler
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('firebase-messaging-sw.js').then(() => {
+                const messaging = firebase.messaging();
+                messaging.onBackgroundMessage((payload) => {
+                    console.log('Message received in background: ', payload);
+                    const notificationTitle = payload.notification.title;
+                    const notificationOptions = {
+                        body: payload.notification.body
+                    };
+                    self.registration.showNotification(notificationTitle, notificationOptions);
+                });
+            });
+        }
+    </script>
+
+    <script>
+        // Service Worker code
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('firebase-messaging-sw.js')
+                .then((registration) => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                }).catch((error) => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        }
     </script>
 </body>
-</html>
 
 </html>
