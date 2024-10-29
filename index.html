@@ -29,16 +29,6 @@
             measurementId: "G-Z976JB80PP"
         };
 
-        // Register the service worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('firebase-messaging-sw.js')
-                .then((registration) => {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                }).catch((error) => {
-                    console.error('Service Worker registration failed:', error);
-                });
-        }
-
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
@@ -68,39 +58,47 @@
             alert("New Message: " + payload.notification.title);
         });
 
-        // Service worker functionality
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.addEventListener('message', (event) => {
-                console.log('Service worker message received:', event.data);
-            });
-        }
-
-        // Register the background message handler
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('firebase-messaging-sw.js').then(() => {
-                const messaging = firebase.messaging();
-                messaging.onBackgroundMessage((payload) => {
-                    console.log('Message received in background: ', payload);
-                    const notificationTitle = payload.notification.title;
-                    const notificationOptions = {
-                        body: payload.notification.body
-                    };
-                    self.registration.showNotification(notificationTitle, notificationOptions);
-                });
-            });
-        }
-    </script>
-
-    <script>
-        // Service Worker code
+        // Register the service worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('firebase-messaging-sw.js')
                 .then((registration) => {
                     console.log('Service Worker registered with scope:', registration.scope);
-                }).catch((error) => {
+                })
+                .catch((error) => {
                     console.error('Service Worker registration failed:', error);
                 });
         }
+    </script>
+
+    <script>
+        // firebase-messaging-sw.js content
+        self.addEventListener('install', (event) => {
+            console.log('Service Worker installed.');
+        });
+
+        self.addEventListener('activate', (event) => {
+            console.log('Service Worker activated.');
+        });
+
+        // Import Firebase SDKs for service worker
+        importScripts('https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js');
+        importScripts('https://www.gstatic.com/firebasejs/11.0.1/firebase-messaging.js');
+
+        const firebaseConfig = {
+            messagingSenderId: "952003307164" // Replace with your actual messaging sender ID
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+
+        messaging.onBackgroundMessage((payload) => {
+            console.log('Message received in background: ', payload);
+            const notificationTitle = payload.notification.title;
+            const notificationOptions = {
+                body: payload.notification.body
+            };
+            self.registration.showNotification(notificationTitle, notificationOptions);
+        });
     </script>
 </body>
 
