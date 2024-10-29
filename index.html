@@ -1,25 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akshit Tyagi | Software Engineer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firebase Messaging Example</title>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging-compat.js"></script>
 </head>
-
 <body>
-    <h1>Firebase Cloud Messaging</h1>
-    <button id="requestPermissionButton">Request Notification Permission</button>
-    <p id="tokenDisplay">Token: </p>
-
-    <script type="module">
-        // Import Firebase SDK functions
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
-        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-messaging.js";
-
-        // Your Firebase configuration
-        const firebaseConfig = {
+<h1>Firebase Cloud Messaging</h1>
+<button id="requestPermission">Request Notification Permission</button>
+<p id="tokenDisplay">Token: </p>
+ 
+  <script>
+    // Firebase configuration
+     const firebaseConfig = {
             apiKey: "AIzaSyBTm_AzNMM_Y77-tJlFM5bE8lJv7S_EhFM",
             authDomain: "testmessagingweb-ebddf.firebaseapp.com",
             projectId: "testmessagingweb-ebddf",
@@ -28,47 +24,35 @@
             appId: "1:952003307164:web:c1bb27ac12446afcffaf59",
             measurementId: "G-Z976JB80PP"
         };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-
-        // Initialize Firebase Cloud Messaging
-        const messaging = getMessaging(app);
-
-        // Request permission for notifications
-        document.getElementById('requestPermissionButton').addEventListener('click', () => {
-            Notification.requestPermission()
-                .then(() => {
-                    console.log("Notification permission granted.");
-                    return getToken(messaging, { vapidKey: "BKNj5_uPwc7548lYqPAXKSMTvakQM_iRipc6Xio4q5XIOFAbbW4itITrDYd71Fmg6jgcR6Eoj0IhL4aq7Ps4LOA" });
-                })
-                .then((token) => {
-                    console.log("Generated Token:", token);
-                    document.getElementById('tokenDisplay').innerText = "Token: " + token;
-                })
-                .catch((error) => {
-                    console.error("Permission denied or error occurred:", error);
-                });
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+ 
+    // Initialize Firebase Cloud Messaging
+    const messaging = firebase.messaging();
+ 
+    // Request permission for notifications
+    document.getElementById('requestPermission').addEventListener('click', () => {
+      Notification.requestPermission()
+        .then(() => {
+          console.log("Notification permission granted.");
+          console.log(messaging);
+          // Get token
+          return messaging.getToken({ vapidKey: "BLgCiSqVHQh3AC3Kd-JiNOOOsaYgBco2v3Tx9GNKiy_iJA1R6r88RfBX77a9jgwEJ2QEi4b4rkhTrgjeM0RjApk" });
+        })
+        .then((token) => {
+          console.log("Generated Token:", token);
+          document.getElementById('tokenDisplay').innerText = "Token: " + token;
+        })
+        .catch((error) => {
+          console.error("Permission denied or error occurred:", error);
         });
-
-        // Handle incoming messages
-        onMessage(messaging, (payload) => {
-            console.log("Message received:", payload);
-            alert("New Message: " + payload.notification.title);
-        });
-
-        // Register the service worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('firebase-messaging-sw.js')
-                .then((registration) => {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                })
-                .catch((error) => {
-                    console.error('Service Worker registration failed:', error);
-                });
-        }
-    </script>
+    });
+ 
+    // Handle incoming messages
+    messaging.onMessage((payload) => {
+      console.log("Message received:", payload);
+      alert("New Message: " + payload.notification.title);
+    });
+</script>
 </body>
-
 </html>
