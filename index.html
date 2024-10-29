@@ -21,6 +21,7 @@
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
+  import { getMessaging, getToken, onMessage } from"https://www.gstatic.com/firebasejs/11.0.1/firebase-messaging-compat.js";
 
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
@@ -42,7 +43,7 @@
   const analytics = getAnalytics(app);
 
         // Initialize Firebase Cloud Messaging
-    const messaging = firebase.messaging();
+    const messaging = getMessaging();
  
     // Request permission for notifications
     document.getElementById('requestPermission').addEventListener('click', () => {
@@ -50,7 +51,7 @@
         .then(() => {
           console.log("Notification permission granted.");
           // Get token
-          return messaging.getToken({ vapidKey: "YOUR_PUBLIC_VAPID_KEY" });
+          return messaging.getToken({ vapidKey: "BKNj5_uPwc7548lYqPAXKSMTvakQM_iRipc6Xio4q5XIOFAbbW4itITrDYd71Fmg6jgcR6Eoj0IhL4aq7Ps4LOA" });
         })
         .then((token) => {
           console.log("Generated Token:", token);
@@ -67,22 +68,5 @@
       alert("New Message: " + payload.notification.title);
     });
 </script>
-
-    <style>
-        .background-image {
-            background-image: url("./assets/peakpx.jpg");
-            background-repeat: no-repeat;
-            background-size: cover;
-            height: 91vh;
-        }
-
-        .light-text {
-            color: azure;
-        }
-
-        .show-border {
-            border: 1px solid black;
-        }
-    </style>
 </body>
 </html>
