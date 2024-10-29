@@ -9,7 +9,7 @@
 
 <body>
     <h1>Firebase Cloud Messaging</h1>
-    <button id="requestPermission">Request Notification Permission</button>
+    <button id="requestPermissionButton">Request Notification Permission</button>
     <p id="tokenDisplay">Token: </p>
 
     <script type="module">
@@ -37,8 +37,8 @@
         const messaging = getMessaging(app);
 
         // Request permission for notifications
-        document.getElementById('requestPermission').addEventListener('click', () => {
-            messaging.requestPermission()
+        document.getElementById('requestPermissionButton').addEventListener('click', () => {
+            Notification.requestPermission()
                 .then(() => {
                     console.log("Notification permission granted.");
                     // Get token
