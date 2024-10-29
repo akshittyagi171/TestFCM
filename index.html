@@ -69,37 +69,6 @@
                 });
         }
     </script>
-
-    <script>
-        // firebase-messaging-sw.js content
-        self.addEventListener('install', (event) => {
-            console.log('Service Worker installed.');
-        });
-
-        self.addEventListener('activate', (event) => {
-            console.log('Service Worker activated.');
-        });
-
-        // Import Firebase SDKs for service worker
-        importScripts('https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js');
-        importScripts('https://www.gstatic.com/firebasejs/11.0.1/firebase-messaging.js');
-
-        const firebaseConfig = {
-            messagingSenderId: "952003307164" // Replace with your actual messaging sender ID
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const messaging = firebase.messaging();
-
-        messaging.onBackgroundMessage((payload) => {
-            console.log('Message received in background: ', payload);
-            const notificationTitle = payload.notification.title;
-            const notificationOptions = {
-                body: payload.notification.body
-            };
-            self.registration.showNotification(notificationTitle, notificationOptions);
-        });
-    </script>
 </body>
 
 </html>
