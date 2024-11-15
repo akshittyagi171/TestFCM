@@ -49,10 +49,15 @@
     });
  
     // Handle incoming messages
-    messaging.onMessage((payload) => {
-      console.log("Message received:", payload);
-      alert("New Message: " + payload.data.title);
-    });
+messaging.onMessage((payload) => {
+  console.log("Message received:", payload);
+
+  // Display title and body in the alert box
+  const title = payload.data.title || "No Title";
+  const body = payload.data.body || "No Body";
+  
+  alert(`New Message:\nTitle: ${title}\nBody: ${body}`);
+});
 </script>
 </body>
 </html>
